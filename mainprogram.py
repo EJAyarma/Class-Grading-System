@@ -1,7 +1,7 @@
 """This module is the main program coordinating the class grading system"""
 
 from process_functions import grade_student, rank_students
-from process_functions import print_results_full, print_results_less
+from output import print_results_short
 
 students_num = int(input("Enter the number of students\n"))
 index_numbers = []
@@ -70,32 +70,5 @@ for course in range(courses_num):
     course_grades_all.append(course_grades)
 
 # Rank students
-ranked_students = rank_students(index_numbers, total_mark_all)
-
-def print_results_full():
-    """
-    Print results in the format:
-    index_number, course_mark, course_grade, total_mark
-    """
-    print("Index Number{}{}{}{}{}{}{}{}{}{}".format("\t", course_names[0], "\t", "Grade", "\t" * 2, course_names[1], "\t",
-                                                "Grade", "\t" * 2, "Total Mark"))
-    for i in range(students_num):
-        print("{}{}{}{}{}{}{}{}{}{}{}".format(index_numbers[i], "\t" * 2, course_marks_all[0][i], "\t",
-                                            course_grades_all[0][i], "\t" * 2, course_marks_all[1][i], "\t",
-                                            course_grades_all[1][i], "\t" * 2, total_mark_all[i]))
-
-
-def print_results_less():
-    """
-    Print out results in the format: 
-    student's index numbers, total marks and position
-    """
-    print("{}{}{}{}{}".format("Index Number", "\t" * 2, "Total Mark", "\t" * 2, "Position"))
-    for i in ranked_students:
-        print("{}{}{}{}{}".format(i[0], "\t" * 3, i[1], "\t" * 3, i[2]))
-
-
-print_results_full()
-print()
-print()
-print_results_less()
+student_data = rank_students(index_numbers, total_mark_all)
+print_results_short(student_data)

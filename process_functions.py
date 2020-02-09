@@ -1,4 +1,6 @@
-"""This module contains functions we'll use to process students' data"""
+"""Tunctions used to process students' data"""
+
+from collections import OrderedDict
 
 # Function for grade_student
 def grade_student(mark):
@@ -18,35 +20,27 @@ def grade_student(mark):
 
 
 # Define function to rank students
-def rank_students(index_numbers, mark_list):
-    mark_list_temp = mark_list[:]
+def rank_students(index_numbers, total_mark_all):
     index_rank_all = []
-    index_rank_all_processed = []  # Position list
-    # iterate through students marks and indices and store them as lists in a list
-    for i in index_numbers:
-        index_rank = []
-        index_rank.append(i)
-        index_rank.append(mark_list_temp[index_numbers.index(i)])
-        index_rank_all.append(index_rank)
-    # Rearrange student's list of index and total mark
-    for i in index_numbers:
-        highest_mark = max(mark_list_temp)  # index of highest mark
-        index_rank_all_processed.append(index_rank_all[mark_list_temp.index(highest_mark)])  # Add to position list
-        index_rank_all.remove(
-            index_rank_all[mark_list_temp.index(highest_mark)])  # remove instance of list of highest mark
-        mark_list_temp.remove(highest_mark)  # remove instance of highest mark
+    student = OrderedDict(index_number=index_numbers[i], total_mark=total_mark_all[i], position="")
+    for i in range(len(index_numbers)):
+        index_rank_all.append(student)
+
+    # Sort student data acoording to total mark
+    index_rank_all.sort(key=lambda student_data: student_data["total_mark"])
+
     # Perform positioning
-    index_rank_all_processed[0].append(1)  # Give 1st position to 1st element of position list
-    # Continue
-    position_count = 2
-    for i in range(1, len(index_rank_all_processed), 1):
-        if (index_rank_all_processed[i - 1][1] == index_rank_all_processed[i][
-            1]):  # Does total mark in position list occur more than once?
-            index_rank_all_processed[i].append(index_rank_all_processed[i - 1][-1])  # Then they'll have same position
-            position_count += 1
+    for i, student_data in enumerate(index_rank_all, start=1):
+        if i != 1:
+            current_student = index_rank_all[i-1]
+            previous_student = index_rank_all[i-2]
+            if current_student["total_mark"] == previous_student["total_mark"]:
+                current_student["position"] = previous_student["position"]
+            else:
+                student_data["position"] = i
         else:
-            index_rank_all_processed[i].append(position_count)  # Otherwise one person takes position
-            position_count += 1
-    return index_rank_all_processed  # lists in list in the form of smaller_list[index_number, total_mark, position]
-# end of rank_students()
+            student_data["position"] = i
+    
+    return index_rank_all
+    # end of rank_students()
 
